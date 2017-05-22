@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author RafaelaEmília
  */
-@WebServlet(name = "CriarPedidoServlet", urlPatterns = {"/CriarPedidoServlet"})
+@WebServlet(name = "CriarPedidoServlet", urlPatterns = {"/novo.html"})
 public class CriarPedidoServlet extends HttpServlet {
 
     
