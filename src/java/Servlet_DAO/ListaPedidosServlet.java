@@ -46,7 +46,7 @@ public class ListaPedidosServlet extends HttpServlet {
             }
 
             request.setAttribute("pedidos", pedidos);
-            request.getRequestDispatcher("WEB-INF/lista-porPedido.jsp").forward(request, response);
+            request.getRequestDispatcher("WEB-INF/lista-Pedidos.jsp").forward(request, response);
         } else if (request.getRequestURI().contains("/listarItemPedido.html")) {
 
             List<Pedido> Itenspedido;
@@ -62,7 +62,7 @@ public class ListaPedidosServlet extends HttpServlet {
             }
 
             request.setAttribute("Itenspedido", Itenspedido);
-            request.getRequestDispatcher("WEB-INF/lista-itensPorPedido.jsp").forward(request, response);
+            request.getRequestDispatcher("WEB-INF/lista-itemPedido.jsp").forward(request, response);
         } else if (request.getRequestURI().contains("/listaDono.html")) {
             List<Pedido> pedidos;
 
