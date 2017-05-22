@@ -77,7 +77,7 @@ public class ListaPedidosServlet extends HttpServlet {
             }
 
             request.setAttribute("pedidos", pedidos);
-            request.getRequestDispatcher("WEB-INF/lista-porDono.jsp").forward(request, response);
+            request.getRequestDispatcher("WEB-INF/lista-pedidoDono.jsp").forward(request, response);
         }
     }
    
