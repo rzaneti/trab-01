@@ -23,7 +23,8 @@ public class PedidoDAO {
     private PreparedStatement opListar;
     private final PreparedStatement opBuscaPorItemPedido;
     private final PreparedStatement opListarDono;
-    
+    private final PreparedStatement opAtualiza;
+    private final PreparedStatement opBuscaPorItens;
     
     public PedidoDAO() throws Exception{
         
@@ -33,11 +34,13 @@ public class PedidoDAO {
         
         opListar = conexao.prepareStatement("SELECT * FROM pedido");
         
-         opBuscaPorItemPedido = conexao.prepareStatement("SELECT * FROM Item WHERE pedido = ?");
+        opBuscaPorItemPedido = conexao.prepareStatement("SELECT * FROM Item WHERE pedido = ?");
          
-          opListarDono = conexao.prepareStatement("SELECT dono, SUM(valor) as valorTotal FROM Item GROUP BY dono");
-    
+        opListarDono = conexao.prepareStatement("SELECT dono, SUM(valor) as valorTotal FROM Item GROUP BY dono");
         
+        opAtualiza = conexao.prepareStatement("UPDATE Item SET Pedido = ?, Dono = ?, Valor=?, Nome=? WHERE id = ?");
+        
+        opBuscaPorItens = conexao.prepareStatement("SELECT * FROM Item WHERE id = ?");
     }    
     
 
@@ -120,7 +123,7 @@ public class PedidoDAO {
                 itemPedido.setDono(resultado.getString("dono"));
                 itemPedido.setValor(resultado.getFloat("valor"));
                 itemPedido.setNome(resultado.getString("nome"));
-                itemPedido.setAtualizacao(resultado.getTimestamp("atualizacao"));
+                itemPedido.setAtualizacao(resultado.getDate("atualizacao"));
                 itenspedido.add(itemPedido);
             }
 
@@ -152,4 +155,43 @@ public class PedidoDAO {
         }
     
 }
+
+     public void atualiza(Pedido pedido) throws Exception {
+        try {
+            opAtualiza.clearParameters();
+            opAtualiza.setLong(1, pedido.getPedido());
+            opAtualiza.setString(2, pedido.getDono());
+            opAtualiza.setFloat(3, (float) pedido.getValor());
+            opAtualiza.setString(4, pedido.getNome());
+            opAtualiza.setLong(5, pedido.getId());
+            opAtualiza.executeUpdate();
+        } catch (SQLException ex) {
+            throw new Exception("Erro atualizar Item!", ex);
+        }
+    }
+
+     public Pedido getByPedido(Long id) throws Exception {
+        try {
+            Pedido pedido = null;
+            opBuscaPorItens.clearParameters();
+            opBuscaPorItens.setLong(1, id);
+
+            ResultSet resultado = opBuscaPorItens.executeQuery();
+
+            if (resultado.next()) {
+                pedido = new Pedido();
+
+                pedido.setId(resultado.getLong("id"));
+                pedido.setPedido(resultado.getLong("pedido"));
+                pedido.setDono(resultado.getString("dono"));
+                pedido.setValor(resultado.getFloat("valor"));
+                pedido.setNome(resultado.getString("nome"));
+                pedido.setAtualizacao(resultado.getDate("atualizacao"));
+            }
+            return pedido;
+
+        } catch (SQLException ex) {
+            throw new Exception("Erro ao buscar os pedidos no banco!", ex);
+        }
+    }
 }
